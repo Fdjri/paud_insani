@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Kepsek\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,8 @@ Route::middleware('auth')->group(function () {
 
     // Rute Grup untuk Kepala Sekolah
     Route::middleware('role:kepala sekolah')->prefix('kepsek')->group(function () {
-        Route::get('/dashboard', function() {
-            return view('kepsek.dashboard');
-        })->name('kepala-sekolah.dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+             ->name('kepala-sekolah.dashboard');
     });
 
     // Rute Grup untuk Guru
