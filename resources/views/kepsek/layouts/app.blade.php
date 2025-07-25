@@ -120,7 +120,6 @@
                 }
 
                 if (!animate) {
-                    // Force a reflow before re-adding transitions to ensure state is applied instantly
                     void sidebar.offsetWidth;
                     sidebar.classList.add(...transitions);
                     mainContent.classList.add(...transitions);
@@ -142,7 +141,7 @@
 
             if (window.innerWidth >= 1024) {
                 const savedState = localStorage.getItem('sidebarState') || 'open';
-                applySidebarState(savedState, false); // Apply initial state without animation
+                applySidebarState(savedState, false);
             }
 
             profileButton.addEventListener('click', (event) => {
