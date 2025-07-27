@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/teleport@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/anchor@3.x.x/dist/cdn.min.js"></script>
     
     {{-- Memuat Aset dari Vite & Livewire --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -37,7 +39,7 @@
                         <span class="ml-3 font-medium sidebar-text">Data Siswa</span>
                     </a>
                     
-                    <a href="#" class="flex items-center justify-center lg:justify-start px-4 py-2.5 rounded-lg transition-colors duration-200 {{ request()->is('kepsek/absensi*') ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <a href="{{ route('kepsek.absensi.index') }}" class="flex items-center justify-center lg:justify-start px-4 py-2.5 rounded-lg transition-colors duration-200 {{ request()->is('kepsek/absensi*') ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
                         <i class="las la-clipboard-list text-xl w-5 h-5 shrink-0"></i>
                         <span class="ml-3 font-medium sidebar-text">Absensi</span>
                     </a>
