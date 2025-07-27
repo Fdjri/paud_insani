@@ -6,43 +6,54 @@ use Illuminate\Database\Seeder;
 use App\Models\Siswa;
 use App\Models\Absensi;
 use App\Models\Pembayaran;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class SiswaSeeder extends Seeder
 {
     public function run(): void
     {
-        // Membuat 200 siswa menggunakan factory
-        Siswa::factory()->count(200)->create()->each(function ($siswa) {
-            // Untuk setiap siswa yang dibuat, buat juga data absensi & pembayaran
+        $this->command->warn("Menghapus data lama dari tabel siswa, absensi, dan pembayaran...");
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Siswa::truncate();
+        Absensi::truncate();
+        Pembayaran::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        $this->command->info("Data lama berhasil dihapus.");
 
-            // 1. Buat data absensi untuk 3 bulan terakhir
-            $tanggal = Carbon::now()->subMonths(3);
+        Siswa::flushEventListeners();
+
+        $this->command->getOutput()->progressStart(1001);
+
+        Siswa::factory()->count(1001)->create()->each(function ($siswa) {
+            $tanggalAbsensi = Carbon::now();
             for ($i = 0; $i < 90; $i++) {
-                $tanggal->addDay();
-                // Lewati hari Sabtu (6) dan Minggu (0)
-                if ($tanggal->dayOfWeek != 0 && $tanggal->dayOfWeek != 6) {
+                if (!$tanggalAbsensi->isWeekend()) {
                     Absensi::create([
                         'siswa_id' => $siswa->id,
-                        'tanggal_absensi' => $tanggal->format('Y-m-d'),
-                        'status' => fake()->randomElement(['Hadir', 'Hadir', 'Hadir', 'Hadir', 'Sakit', 'Izin']),
+                        'tanggal_absensi' => $tanggalAbsensi->format('Y-m-d'),
+                        'status' => fake()->randomElement(['Hadir', 'Hadir', 'Hadir', 'Sakit', 'Izin', 'Alpa']),
                     ]);
                 }
+                $tanggalAbsensi->subDay();
             }
 
-            // 2. Buat data pembayaran untuk 3 bulan terakhir
-            for ($i = 0; $i < 3; $i++) {
-                $bulan = Carbon::now()->subMonths($i);
+            for ($i = 0; $i < 12; $i++) {
+                $bulanPembayaran = Carbon::now()->subMonths($i);
                 Pembayaran::create([
                     'siswa_id' => $siswa->id,
+                    'user_id' => \App\Models\User::where('role', 'bendahara')->inRandomOrder()->first()->id,
                     'jenis_pembayaran' => 'SPP',
-                    'tahun_ajaran' => $bulan->year,
-                    'bulan_pembayaran' => $bulan->format('F'), // e.g., 'July'
+                    'tahun_ajaran' => $bulanPembayaran->year,
+                    'bulan_pembayaran' => $bulanPembayaran->translatedFormat('F'),
                     'jumlah_bayar' => 300000,
-                    'tanggal_bayar' => $bulan->startOfMonth()->addDays(rand(5, 10))->format('Y-m-d'),
+                    'tanggal_bayar' => $bulanPembayaran->startOfMonth()->addDays(rand(5, 15))->format('Y-m-d'),
                     'status' => 'Lunas'
                 ]);
             }
+            $this->command->getOutput()->progressAdvance();
         });
+
+        $this->command->getOutput()->progressFinish();
     }
 }
