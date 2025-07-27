@@ -11,51 +11,90 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    /**
+     * Menyiapkan data kartu statistik untuk halaman dasbor.
+     */
     public function index()
     {
-        // --- Data untuk Kartu Statistik ---
         $totalSiswa = Siswa::where('status', 'aktif')->count();
         $totalGuru = User::where('role', 'guru')->count();
-        // Asumsi Tendik adalah Operator dan Bendahara
         $totalTendik = User::whereIn('role', ['operator', 'bendahara'])->count();
         
         $pemasukan = Keuangan::where('tipe', 'pemasukan')->sum('biaya');
         $pengeluaran = Keuangan::where('tipe', 'pengeluaran')->sum('biaya');
         $totalDana = $pemasukan - $pengeluaran;
 
-
-        // --- Data untuk Grafik Keuangan (12 bulan terakhir) ---
-        $keuanganData = Keuangan::select(
-            DB::raw('YEAR(tanggal) as tahun'),
-            DB::raw('MONTH(tanggal) as bulan'),
-            DB::raw("SUM(CASE WHEN tipe = 'pemasukan' THEN biaya ELSE 0 END) as total_pemasukan"),
-            DB::raw("SUM(CASE WHEN tipe = 'pengeluaran' THEN biaya ELSE 0 END) as total_pengeluaran")
-        )
-        ->whereYear('tanggal', date('Y'))
-        ->groupBy('tahun', 'bulan')
-        ->orderBy('tahun', 'asc')
-        ->orderBy('bulan', 'asc')
-        ->get();
-
-        $namaBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        $dataPemasukan = array_fill(0, 12, 0);
-        $dataPengeluaran = array_fill(0, 12, 0);
-        
-        foreach ($keuanganData as $data) {
-            $dataPemasukan[$data->bulan - 1] = $data->total_pemasukan;
-            $dataPengeluaran[$data->bulan - 1] = $data->total_pengeluaran;
-        }
-
-
-        // --- Kirim semua data ke view ---
         return view('kepsek.dashboard', compact(
             'totalSiswa',
             'totalGuru',
             'totalTendik',
-            'totalDana',
-            'namaBulan',
-            'dataPemasukan',
-            'dataPengeluaran'
+            'totalDana'
         ));
+    }
+
+    /**
+     * Menyediakan data pendaftaran siswa per tahun untuk grafik.
+     */
+    public function getSiswaChartData(Request $request)
+    {
+        $namaKelas = $request->query('kelas');
+
+        $query = Siswa::select(
+                DB::raw('tahun_masuk as tahun'),
+                DB::raw('COUNT(*) as jumlah')
+            )
+            ->whereNotNull('tahun_masuk');
+
+        if ($namaKelas && $namaKelas !== 'semua') {
+            $query->join('kelas', 'siswa.kelas_id', '=', 'kelas.id')
+                  ->where('kelas.nama_kelas', $namaKelas);
+        }
+        
+        $pendaftaranPerTahun = $query->groupBy('tahun')->orderBy('tahun', 'asc')->get()->pluck('jumlah', 'tahun');
+        
+        // Buat rentang tahun dari data yang ada
+        $minYear = $pendaftaranPerTahun->keys()->min() ?? date('Y');
+        $maxYear = $pendaftaranPerTahun->keys()->max() ?? date('Y');
+        $labels = range($minYear, $maxYear);
+        
+        $data = array_map(function($year) use ($pendaftaranPerTahun) {
+            return $pendaftaranPerTahun->get($year, 0);
+        }, $labels);
+
+        return response()->json([
+            'labels' => $labels,
+            'data' => $data,
+        ]);
+    }
+
+    /**
+     * Menyediakan data keuangan per bulan untuk grafik.
+     */
+    public function getKeuanganChartData(Request $request)
+    {
+        $tahun = $request->query('tahun', date('Y')); // Ambil tahun dari filter, default tahun ini
+
+        $keuanganData = Keuangan::select(
+            DB::raw('MONTH(tanggal) as bulan'),
+            DB::raw("SUM(CASE WHEN tipe = 'pemasukan' THEN biaya ELSE 0 END) as total_pemasukan"),
+            DB::raw("SUM(CASE WHEN tipe = 'pengeluaran' THEN biaya ELSE 0 END) as total_pengeluaran")
+        )
+        ->whereYear('tanggal', $tahun)
+        ->groupBy('bulan')
+        ->orderBy('bulan', 'asc')
+        ->get();
+
+        $dataPemasukan = array_fill(0, 12, 0);
+        $dataPengeluaran = array_fill(0, 12, 0);
+        
+        foreach ($keuanganData as $data) {
+            $dataPemasukan[$data->bulan - 1] = (int) $data->total_pemasukan;
+            $dataPengeluaran[$data->bulan - 1] = (int) $data->total_pengeluaran;
+        }
+
+        return response()->json([
+            'pemasukan' => $dataPemasukan,
+            'pengeluaran' => $dataPengeluaran,
+        ]);
     }
 }
