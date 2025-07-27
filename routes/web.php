@@ -3,19 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Kepsek\DashboardController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Di sini Anda mendaftarkan semua rute web untuk aplikasi Anda.
-|
-*/
-
-// ===================================================================
-// Rute-rute ini dapat diakses oleh siapa saja (tidak perlu login)
-// ===================================================================
+use App\Http\Controllers\Kepsek\ProfileController;
+use App\Http\Controllers\Kepsek\SiswaController;
 
 // Mengarahkan rute utama (/) ke halaman login
 Route::get('/', function () {
@@ -41,6 +30,16 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:kepala sekolah')->prefix('kepsek')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
              ->name('kepala-sekolah.dashboard');
+        Route::get('/charts/siswa', [DashboardController::class, 'getSiswaChartData'])
+         ->name('kepsek.charts.siswa');
+        Route::get('/charts/keuangan', [DashboardController::class, 'getKeuanganChartData'])
+         ->name('kepsek.charts.keuangan');
+        Route::get('/data-siswa', [SiswaController::class, 'index'])
+         ->name('kepsek.siswa.index');
+        Route::get('/profile', [ProfileController::class, 'index'])
+         ->name('kepsek.profile.index');
+        Route::put('/profile', [ProfileController::class, 'update'])
+         ->name('kepsek.profile.update');
     });
 
     // Rute Grup untuk Guru
