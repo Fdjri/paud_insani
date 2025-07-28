@@ -6,6 +6,7 @@ use App\Http\Controllers\Kepsek\DashboardController;
 use App\Http\Controllers\Kepsek\ProfileController;
 use App\Http\Controllers\Kepsek\SiswaController;
 use App\Http\Controllers\Kepsek\AbsensiController;
+use App\Http\Controllers\Kepsek\SPPController;
 
 // Mengarahkan rute utama (/) ke halaman login
 Route::get('/', function () {
@@ -41,6 +42,10 @@ Route::middleware('auth')->group(function () {
          ->name('kepsek.absensi.index');
         Route::get('/absensi/isi/{tanggal}', [AbsensiController::class, 'create'])
          ->name('kepsek.absensi.create');
+        Route::get('/spp', [SPPController::class, 'index'])
+         ->name('kepsek.spp.index');
+        Route::get('/spp/{tahun}/{bulan}', [SPPController::class, 'show'])
+         ->name('kepsek.spp.show');
         Route::get('/profile', [ProfileController::class, 'index'])
          ->name('kepsek.profile.index');
         Route::put('/profile', [ProfileController::class, 'update'])
