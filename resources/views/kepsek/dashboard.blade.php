@@ -37,7 +37,7 @@
                 </div>
             </div>
         </a>
-        <a href="#" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <a href="{{ route('kepsek.keuangan.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div class="flex justify-between items-center">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Dana</p>
