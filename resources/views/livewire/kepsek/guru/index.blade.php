@@ -41,16 +41,27 @@
         {{ $users->links() }}
     </div>
 
-    <div x-data="{ show: @entangle('showDetailModal') }" x-show="show" @keydown.escape.window="show = false" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+    <div x-data="{ show: @entangle('showDetailModal') }" 
+        x-show="show" 
+        @keydown.escape.window="show = false" 
+        class="fixed inset-0 z-50 overflow-y-auto" 
+        style="display: none;">
+        
         <div class="flex items-center justify-center min-h-screen p-4">
             <div x-show="show" x-transition class="fixed inset-0 bg-opacity-50 backdrop-blur-sm"></div>
+            
             <div x-show="show" x-transition @click.away="show = false" class="relative bg-white rounded-lg shadow-xl w-full max-w-2xl p-8">
                 <button @click="show = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                
                 @if ($currentUser)
                     <h3 class="text-xl font-semibold border-b pb-4">Detail {{ $currentUser->nama }}</h3>
+
                     <div class="mt-6 flex flex-col items-center">
-                        <img class="h-32 w-32 rounded-lg object-cover" src="{{ $currentUser->foto ? asset('storage/' . $currentUser->foto) : 'https://i.pravatar.cc/150?u=' . $currentUser->id }}" alt="Foto">
+                        <img class="h-32 w-32 rounded-lg object-cover" 
+                            src="{{ $currentUser->foto ? asset('storage/' . $currentUser->foto) : 'https://i.pravatar.cc/150?u=' . $currentUser->id }}" 
+                            alt="Foto">
                     </div>
+
                     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4 text-sm">
                         @php
                             function detailUserItem($label, $value) {
@@ -60,6 +71,7 @@
                                 echo '</div>';
                             }
                         @endphp
+
                         {!! detailUserItem('Nama Lengkap', $currentUser->nama) !!}
                         {!! detailUserItem('Tanggal Lahir', \Carbon\Carbon::parse($currentUser->tanggal_lahir)->format('d-m-Y')) !!}
                         {!! detailUserItem('NIK', $currentUser->nik) !!}
@@ -67,8 +79,12 @@
                         {!! detailUserItem('Nomor Anggota', $currentUser->nomor_anggota) !!}
                         {!! detailUserItem('Periode', $currentUser->periode) !!}
                         {!! detailUserItem('Pendidikan', $currentUser->pendidikan) !!}
-                        {!! detailUserItem('Kelas Wali', $currentUser->kelasWali?->nama_kelas ?? '-') !!}
                         {!! detailUserItem('Role', ucfirst($currentUser->role)) !!}
+
+                        {{-- Tampilkan kolom ini hanya jika role adalah guru --}}
+                        @if ($currentUser->role === 'guru')
+                            {!! detailUserItem('Wali Kelas', $currentUser->kelas?->nama_kelas ?? '-') !!}
+                        @endif
                     </div>
                 @endif
             </div>
