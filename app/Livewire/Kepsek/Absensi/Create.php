@@ -7,41 +7,82 @@ use App\Models\Siswa;
 use App\Models\Kelas;
 use App\Models\Absensi;
 use Carbon\Carbon;
-use Livewire\WithPagination; // <-- Tambahkan ini
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Livewire\WithPagination;
 
 class Create extends Component
 {
-    use WithPagination; // <-- Tambahkan ini
+    use WithPagination;
 
     public $tanggal;
     public $kehadiran = [];
+    public $search = '', 
+           $filterKelas = '', 
+           $filterStatus = '';
+    public $isHoliday = false;
+    public $holidayName = '';
 
-    // Properti baru untuk filter dan pencarian
-    public $search = '';
-    public $filterKelas = '';
-    public $filterStatus = ''; // Filter status kehadiran
-
-    /**
-     * Method ini berjalan saat component pertama kali dimuat.
-     */
     public function mount($tanggal)
     {
         $this->tanggal = $tanggal;
+        $date = Carbon::parse($tanggal);
+        $tahun = $date->year;
 
-        // Mengambil semua siswa yang aktif untuk mengisi nilai default
+        if ($date->isWeekend()) {
+            $this->isHoliday = true;
+            $this->holidayName = 'Akhir Pekan';
+            return;
+        }
+
+        // Ambil data libur dari cache atau API
+        $holidaysData = Cache::remember('hari_libur_' . $tahun, now()->addDay(), function () use ($tahun) {
+            try {
+                $response = Http::get("https://date.nager.at/api/v3/PublicHolidays/{$tahun}/ID");
+                if ($response->successful()) {
+                    // Kembalikan array biasa, kita akan ubah ke collection nanti
+                    return $response->json();
+                }
+            } catch (\Exception $e) {
+                return []; // Kembalikan array kosong jika gagal
+            }
+            return [];
+        });
+
+        // PENTING: Ubah data dari cache/API menjadi Collection di sini
+        $holidays = collect($holidaysData)->keyBy('date');
+
+        if ($holidays->has($this->tanggal)) {
+            $this->isHoliday = true;
+            $this->holidayName = $holidays->get($this->tanggal)['localName'];
+            return;
+        }
+
+        // Jika bukan hari libur, siapkan data absensi
         $semuaSiswaAktif = Siswa::where('status', 'aktif')
             ->with(['absensi' => fn($q) => $q->where('tanggal_absensi', $this->tanggal)])
             ->get();
 
         foreach ($semuaSiswaAktif as $siswa) {
-            $this->kehadiran[$siswa->id] = $siswa->absensi->first()->status ?? 'Hadir';
+            $this->kehadiran[$siswa->id] = $siswa->absensi->first()->status ?? 'Kosong';
         }
     }
     
     // Reset halaman saat melakukan pencarian atau filter
-    public function updatingSearch() { $this->resetPage(); }
-    public function updatedFilterKelas() { $this->resetPage(); }
-    public function updatedFilterStatus() { $this->resetPage(); }
+    public function updatingSearch() 
+    { 
+        $this->resetPage(); 
+    }
+    
+    public function updatedFilterKelas() 
+    { 
+        $this->resetPage(); 
+    }
+
+    public function updatedFilterStatus() 
+    { 
+        $this->resetPage(); 
+    }
 
     public function resetFilters()
     {
@@ -57,10 +98,13 @@ class Create extends Component
     public function save()
     {
         foreach ($this->kehadiran as $siswaId => $status) {
-            Absensi::updateOrCreate(
-                ['siswa_id' => $siswaId, 'tanggal_absensi' => $this->tanggal],
-                ['status' => $status]
-            );
+            // Jangan simpan data jika statusnya 'Kosong'
+            if ($status !== 'Kosong') {
+                Absensi::updateOrCreate(
+                    ['siswa_id' => $siswaId, 'tanggal_absensi' => $this->tanggal],
+                    ['status' => $status]
+                );
+            }
         }
         $this->dispatch('notify', 'Absensi untuk tanggal ' . Carbon::parse($this->tanggal)->format('d F Y') . ' berhasil disimpan!');
     }
@@ -73,12 +117,11 @@ class Create extends Component
             ->when($this->search, fn($q) => $q->where('nama_lengkap', 'like', '%' . $this->search . '%'))
             ->when($this->filterKelas, fn($q) => $q->whereHas('kelas', fn($sq) => $sq->where('nama_kelas', $this->filterKelas)))
             ->when($this->filterStatus, function ($query) {
-                // Filter berdasarkan status kehadiran yang sudah dipilih
                 $siswaIds = collect($this->kehadiran)->filter(fn($status) => $status == $this->filterStatus)->keys();
                 $query->whereIn('id', $siswaIds);
             })
             ->orderBy('nama_lengkap', 'asc')
-            ->paginate(10); // Menampilkan 10 siswa per halaman
+            ->paginate(10);
 
         return view('livewire.kepsek.absensi.create', [
             'siswas' => $siswas,
