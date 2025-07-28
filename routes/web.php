@@ -8,6 +8,7 @@ use App\Http\Controllers\Kepsek\SiswaController;
 use App\Http\Controllers\Kepsek\AbsensiController;
 use App\Http\Controllers\Kepsek\SPPController;
 use App\Http\Controllers\Kepsek\KeuanganController;
+use App\Http\Controllers\Kepsek\GuruController;
 
 // Mengarahkan rute utama (/) ke halaman login
 Route::get('/', function () {
@@ -30,31 +31,34 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Rute Grup untuk Kepala Sekolah
-    Route::middleware('role:kepala sekolah')->prefix('kepsek')->group(function () {
+    Route::middleware('role:kepala sekolah')->prefix('kepsek')->group(function () 
+    {
         Route::get('/dashboard', [DashboardController::class, 'index'])
              ->name('kepala-sekolah.dashboard');
         Route::get('/charts/siswa', [DashboardController::class, 'getSiswaChartData'])
-         ->name('kepsek.charts.siswa');
+             ->name('kepsek.charts.siswa');
         Route::get('/charts/keuangan', [DashboardController::class, 'getKeuanganChartData'])
-         ->name('kepsek.charts.keuangan');
+             ->name('kepsek.charts.keuangan');
         Route::get('/data-siswa', [SiswaController::class, 'index'])
-         ->name('kepsek.siswa.index');
+             ->name('kepsek.siswa.index');
         Route::get('/absensi', [AbsensiController::class, 'index'])
-         ->name('kepsek.absensi.index');
+             ->name('kepsek.absensi.index');
         Route::get('/absensi/isi/{tanggal}', [AbsensiController::class, 'create'])
-         ->name('kepsek.absensi.create');
+             ->name('kepsek.absensi.create');
         Route::get('/spp', [SPPController::class, 'index'])
-         ->name('kepsek.spp.index');
+             ->name('kepsek.spp.index');
         Route::get('/spp/{tahun}/{bulan}', [SPPController::class, 'show'])
-         ->name('kepsek.spp.show');
+             ->name('kepsek.spp.show');
         Route::get('/keuangan', [KeuanganController::class, 'index'])
-         ->name('kepsek.keuangan.index');
+             ->name('kepsek.keuangan.index');
         Route::post('/keuangan/export', [KeuanganController::class, 'export'])
-         ->name('kepsek.keuangan.export');
+             ->name('kepsek.keuangan.export');
+        Route::get('/guru-tendik', [GuruController::class, 'index'])
+             ->name('kepsek.guru.index');
         Route::get('/profile', [ProfileController::class, 'index'])
-         ->name('kepsek.profile.index');
+             ->name('kepsek.profile.index');
         Route::put('/profile', [ProfileController::class, 'update'])
-         ->name('kepsek.profile.update');
+             ->name('kepsek.profile.update');
     });
 
     // Rute Grup untuk Guru

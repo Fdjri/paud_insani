@@ -57,7 +57,7 @@ class User extends Authenticatable
     /**
      * Mendapatkan kelas di mana user ini menjadi wali kelas.
      */
-    public function kelasWali(): HasOne
+    public function kelas(): HasOne
     {
         return $this->hasOne(Kelas::class, 'guru_id');
     }

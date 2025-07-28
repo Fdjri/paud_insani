@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kepala Sekolah - PAUD Insani</title>
+
+    <link rel="icon" href="{{ asset('logo.png') }}" type="image/png">
     
     {{-- Memuat Library Font & JavaScript --}}
     <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
@@ -21,10 +23,14 @@
     <div class="relative min-h-screen lg:flex">
         <div id="sidebar" class="bg-white shadow-lg w-64 shrink-0 fixed inset-y-0 left-0 lg:relative lg:translate-x-0 transform -translate-x-full transition-all duration-300 ease-in-out z-30">
             <div class="flex flex-col h-full">
-                <div class="h-20 flex items-center justify-center shrink-0">
-                    <a href="{{ route('kepala-sekolah.dashboard') }}" class="text-2xl font-bold">
-                        <span class="text-blue-600 sidebar-text">PAUD</span>
-                        <span class="text-gray-800 sidebar-text">Insani</span>
+                <div class="h-20 flex items-center justify-center shrink-0 px-4">
+                    <a href="{{ route('kepala-sekolah.dashboard') }}" class="flex items-center gap-3">
+                        <img src="{{ asset('logo.png') }}" alt="Logo PAUD Insani" class="h-10 w-auto">
+                        
+                        <div class="text-xl font-bold sidebar-text">
+                            <span class="text-blue-600">PAUD</span>
+                            <span class="text-gray-800">Insani</span>
+                        </div>
                     </a>
                 </div>
 
@@ -54,7 +60,7 @@
                         <span class="ml-3 font-medium sidebar-text">Data Keuangan</span>
                     </a>
 
-                    <a href="#" class="flex items-center justify-center lg:justify-start px-4 py-2.5 rounded-lg transition-colors duration-200 {{ request()->is('kepsek/guru*') ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <a href="{{ route('kepsek.guru.index') }}" class="flex items-center justify-center lg:justify-start px-4 py-2.5 rounded-lg transition-colors duration-200 {{ request()->is('kepsek/guru*') ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
                         <i class="las la-user-tie text-xl w-5 h-5 shrink-0"></i>
                         <span class="ml-3 font-medium sidebar-text">Data Guru & Tendik</span>
                     </a>
