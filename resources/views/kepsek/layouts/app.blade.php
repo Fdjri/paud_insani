@@ -49,7 +49,7 @@
                         <span class="ml-3 font-medium sidebar-text">SPP</span>
                     </a>
 
-                    <a href="#" class="flex items-center justify-center lg:justify-start px-4 py-2.5 rounded-lg transition-colors duration-200 {{ request()->is('kepsek/keuangan*') ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
+                    <a href="{{ route('kepsek.keuangan.index') }}" class="flex items-center justify-center lg:justify-start px-4 py-2.5 rounded-lg transition-colors duration-200 {{ request()->is('kepsek/keuangan*') ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' }}">
                         <i class="las la-chart-bar text-xl w-5 h-5 shrink-0"></i>
                         <span class="ml-3 font-medium sidebar-text">Data Keuangan</span>
                     </a>
