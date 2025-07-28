@@ -20,10 +20,10 @@ class DashboardController extends Controller
         $totalGuru = User::where('role', 'guru')->count();
         $totalTendik = User::whereIn('role', ['operator', 'bendahara'])->count();
         
-        $pemasukan = Keuangan::where('tipe', 'pemasukan')->sum('biaya');
-        $pengeluaran = Keuangan::where('tipe', 'pengeluaran')->sum('biaya');
+        $pemasukan = Keuangan::where('tipe', 'pemasukan')->sum(DB::raw('jumlah * biaya'));
+        $pengeluaran = Keuangan::where('tipe', 'pengeluaran')->sum(DB::raw('jumlah * biaya'));
         $totalDana = $pemasukan - $pengeluaran;
-
+        
         return view('kepsek.dashboard', compact(
             'totalSiswa',
             'totalGuru',
