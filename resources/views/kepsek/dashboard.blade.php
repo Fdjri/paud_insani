@@ -4,7 +4,7 @@
     <h1 class="text-2xl font-semibold text-gray-700">Welcome, {{ auth()->user()->nama }}!</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        <a href="{{ route('kepsek.siswa.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <a href="{{ route('kepsek.siswa.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
             <div class="flex justify-between items-center">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Siswa</p>
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </a>
-        <a href="{{ route('kepsek.guru.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <a href="{{ route('kepsek.guru.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
             <div class="flex justify-between items-center">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Guru</p>
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </a>
-        <a href="{{ route('kepsek.guru.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <a href="{{ route('kepsek.guru.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
             <div class="flex justify-between items-center">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Tendik</p>
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </a>
-        <a href="{{ route('kepsek.keuangan.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <a href="{{ route('kepsek.keuangan.index') }}" class="block bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
             <div class="flex justify-between items-center">
                 <div>
                     <p class="text-sm font-medium text-gray-500">Total Dana</p>
