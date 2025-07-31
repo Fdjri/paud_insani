@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -33,7 +34,16 @@ class ProfileController extends Controller
             'npwp' => ['nullable', 'string', 'max:255'],
             'tanggal_lahir' => ['required', 'date'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], 
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
+
+        // Hapus password dari array jika tidak diisi
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        } else {
+            // Hash password baru jika diisi
+            $validated['password'] = Hash::make($validated['password']);
+        }
 
         if ($request->hasFile('foto')) {
             if ($user->foto) {

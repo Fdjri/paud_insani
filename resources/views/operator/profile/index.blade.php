@@ -58,6 +58,24 @@
                         </div>
                     </div>
 
+                    <div class="mt-6 border-t pt-6">
+                        <h3 class="text-lg font-medium text-gray-900">Ubah Password</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700">Password Baru</label>
+                                <input type="password" name="password" id="password" autocomplete="new-password"
+                                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    placeholder="Kosongkan jika tidak diubah">
+                                @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Password Baru</label>
+                                <input type="password" name="password_confirmation" id="password_confirmation" autocomplete="new-password"
+                                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm ...">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex justify-center mt-8">
                         <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
                             Update
