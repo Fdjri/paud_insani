@@ -30,15 +30,19 @@ class KeuanganController extends Controller
         $fileName = 'Laporan Keuangan ';
 
         if ($tipe == 'perbulan') {
-            $tahun = $request->tahun_bulan;
-            $bulan = $request->bulan;
+            // PERBAIKAN DI SINI: Cast ke integer
+            $tahun = (int) $request->tahun_bulan;
+            $bulan = (int) $request->bulan;
+            
             $namaBulan = \Carbon\Carbon::create()->month($bulan)->translatedFormat('F');
             $fileName .= "{$namaBulan} {$tahun}.xlsx";
             return Excel::download(new KeuanganExport($tahun, $bulan), $fileName);
         }
 
         if ($tipe == 'pertahun') {
-            $tahun = $request->tahun;
+            // PERBAIKAN DI SINI: Cast ke integer
+            $tahun = (int) $request->tahun;
+
             $fileName .= "Tahun {$tahun}.xlsx";
             return Excel::download(new KeuanganExport($tahun), $fileName);
         }
