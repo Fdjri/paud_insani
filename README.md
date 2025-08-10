@@ -1,61 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PAUD Insani Management
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Ini adalah proyek sistem informasi berbasis web yang dibangun untuk PAUD Insani. Aplikasi ini bertujuan untuk membantu pengelolaan data dan informasi di sekolah.
 
-## About Laravel
+## 📜 Tentang Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Proyek ini dikembangkan sebagai sistem informasi untuk mengelola berbagai aspek administrasi dan akademik di PAUD Insani. Dibangun menggunakan framework Laravel, aplikasi ini menyediakan fondasi yang kuat untuk pengembangan lebih lanjut.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Manajemen Data Siswa
 
-## Learning Laravel
+- Manajemen Data Guru
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Manajemen Keuangan
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Pengelolaan Kelas & Absensi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Sistem Informasi Akademik
 
-## Laravel Sponsors
+## 🛠️ Teknologi yang Digunakan
+Proyek ini dibangun dengan menggunakan teknologi modern, antara lain:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Backend: PHP dengan Laravel Framework
 
-### Premium Partners
+Frontend: Blade, Tailwind CSS, Vite
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Database: (Sebutkan database yang Anda gunakan, misal: MySQL, PostgreSQL)
 
-## Contributing
+Dependency Manager: Composer & NPM
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🚀 Panduan Instalasi
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda.
 
-## Code of Conduct
+### Prasyarat
+Pastikan Anda sudah menginstal perangkat lunak berikut di komputer Anda:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+PHP (versi 8.1 atau lebih baru direkomendasikan)
 
-## Security Vulnerabilities
+Composer
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Node.js & NPM
 
-## License
+Web Server server bawaan Laravel
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Database (misal: MySQL, MariaDB)
+
+### Langkah-langkah Instalasi
+#### 1. Clone repositori ini:
+``` 
+git clone https://github.com/Fdjri/paud_insani.git
+cd paud_insani
+```
+#### 2. Instal dependensi PHP menggunakan Composer:
+```
+composer install
+```
+#### 3. Salin file .env.example menjadi .env:
+```
+cp .env.example .env
+```
+#### 4. Buat kunci aplikasi (Application Key):
+```
+php artisan key:generate
+```
+#### 5. Konfigurasi database Anda:
+Buka file .env dan sesuaikan pengaturan database sesuai dengan konfigurasi lokal Anda.
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=user_database_anda
+DB_PASSWORD=password_anda
+```
+#### 6. Jalankan migrasi database:
+Perintah ini akan membuat semua tabel yang diperlukan di database Anda.
+```
+php artisan migrate
+```
+_Opsional: Jika Anda memiliki seeder, jalankan juga perintah php artisan db:seed._
+
+#### 7. Instal dependensi frontend menggunakan NPM:
+```
+npm install
+```
+#### 8. Jalankan Vite untuk kompilasi aset frontend:
+Untuk lingkungan pengembangan:
+```
+npm run dev
+```
+Untuk production:
+```
+npm run build
+```
+#### 9. Jalankan server pengembangan Laravel:
+```
+php artisan serve
+```
+Aplikasi Anda sekarang akan berjalan di 
+```
+http://127.0.0.1:8000.
